@@ -40,52 +40,86 @@ vector<vector<int>> fourSum(vector<int>& nums, int target)
 	{
 		return result;
 	}
-
 	sort(nums.begin(), nums.end());
 
-	for (int fir = 0; fir < length; fir++)
+	for (int i = 0; i < length - 3; i++)
 	{
-		if (fir > 0 && nums[fir] == nums[fir - 1])									/*	确保第一个数和上次取的数不相同	*/
+		if (nums[i] + 3 * nums[i + 1] > target)
+		{
+			break;
+		}
+		if (nums[i] + nums[length - 1] + nums[length - 2] + nums[length - 3] < target)
+		{
+			continue;
+		}
+		if (i > 0 && nums[i] == nums[i - 1])
 		{
 			continue;
 		}
 
-
-		for (int sec = fir + 1; sec < length; sec++)
+		for (int j = i + 1; j < length - 2; j++)
 		{
-			if (sec > fir + 1 && nums[sec] == nums[sec - 1])						/*	当sec==fir+1的时候就不用判断nums[sec]和nums[sec-1]是否相同了，只有sec>fir+1的时候才要判断	*/
+			if (nums[i] + nums[j] + 2 * nums[j + 1] > target)
+			{
+				break;
+			}
+			if (nums[i] + nums[j] + nums[length - 1] + nums[length - 2] < target)
+			{
+				continue;
+			}
+			if (j > i + 1 && nums[j] == nums[j - 1])
 			{
 				continue;
 			}
 
-
-			for (int thi = sec + 1; thi < length; thi++)
+			for (int p = j + 1; p < length - 1; p++)
 			{
-				if (thi > sec + 1 && nums[thi] == nums[thi - 1])
+				if (nums[i] + nums[j] + nums[p]+ nums[p + 1] > target)
+				{
+					break;
+				}
+				if (nums[i] + nums[j] + nums[p] + nums[length - 1] < target)
+				{
+					continue;
+				}
+				if (p > j + 1 && nums[p] == nums[p - 1])
 				{
 					continue;
 				}
 
+				int q = length - 1;
 
-				int fou = length - 1;
-				int goal = target - nums[fir] - nums[sec];
 
-				while (thi < fou && nums[thi] + nums[fou] > goal)						/*	当sec==thi或者nums[sec]+nums[thi]<=-nums[fir]的时候退出循环	*/
-				{																		/*	将thi倒着递减来不断缩小和减少程序运算步骤	*/
-					fou--;
-				}
-
-				if (thi == fou)
+				while (p < q )															/*	这个while是运行速度的关键	*/
 				{
-					break;
-				}
-				if (nums[thi] + nums[fou] == goal)
-				{
-					result.push_back({ nums[fir],nums[sec],nums[thi],nums[fou] });
+					int sum = nums[i] + nums[j] + nums[p] + nums[q];
+					if (sum < target)
+					{
+						p++;
+					}
+					else if (sum > target)
+					{
+						q--;
+					}
+					else
+					{
+						result.push_back({ nums[i] , nums[j] , nums[p] , nums[q] });
+						int last_p = p;
+						int last_q = q;
+						while (p < q && nums[last_p] == nums[p])
+						{
+							p++;
+						}
+						while (p < q && nums[last_q] == nums[q])
+						{
+							q--;
+						}
+					}
 				}
 
 			}
 		}
+		
 	}
 	return result;
 }
